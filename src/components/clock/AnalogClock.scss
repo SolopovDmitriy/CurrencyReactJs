@@ -1,0 +1,219 @@
+$outerbox-height: 300px;
+$outerbox-width: 300px;
+
+$ticksColor: #f1c40f;
+$ticksAnimTime: 600ms;
+$ticksAnimCount: 10;
+$ticksAnimFunction: ease-in-out;
+
+$secHandColor: #c0392b;
+$minHandColor: #d35400;
+$hovHandColor: #f39c12;
+.clock_analog {
+  position: relative;
+}
+.clock-outer {
+  position: relative;
+  height: $outerbox-height;
+  width: $outerbox-height;
+  left: 0;
+  right: 0;
+  margin: auto;
+  top: 50%;
+
+  .clock-inner {
+    height: 100%;
+    width: 100%;
+
+    .mins-box {
+      height: 100%;
+      width: 100%;
+
+      span {
+        position: absolute;
+        top: 0px;
+        left: 0;
+        right: 0;
+        margin: auto;
+        display: block;
+        height: 100%;
+        width: 1px;
+
+        &:before {
+          content: "";
+          display: block;
+          position: absolute;
+          height: 10px;
+          width: 1px;
+          background: $ticksColor;
+          animation: jumpTicks $ticksAnimTime $ticksAnimCount $ticksAnimFunction;
+        }
+
+        &:after {
+          content: "";
+          bottom: 0;
+          display: block;
+          position: absolute;
+          height: 10px;
+          width: 1px;
+          background: $ticksColor;
+          animation: jumpTicks1 $ticksAnimTime $ticksAnimCount $ticksAnimFunction;
+        }
+
+        $min-count: 30;
+        $rotate-deg: 360 / ($min-count*2);
+        $ticksAnimDelay: $ticksAnimTime / $min-count;
+        @for $i from 1 through $min-count {
+          &:nth-child(#{$i}) {
+            transform: rotate(#{$rotate-deg*$i}deg);
+
+            &:before, &:after {
+              animation-delay: $ticksAnimDelay * $i;
+            }
+          }
+          @if $i == 0 or $i % 5 == 0 {
+            &:nth-child(#{$i}) {
+              &:before, &:after {
+                height: 20px;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .clock-hands-box {
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      top: 0;
+      left: 0;
+
+      span {
+        display: block;
+        position: absolute;
+        height: 100%;
+        width: 1px;
+        left: 0;
+        right: 0;
+        margin: auto;
+        transition: all 600ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+        &:before {
+          border-radius: 5px;
+        }
+
+        &.sec-hand {
+          &:before {
+            $from-top: 10px;
+            content: "";
+            display: block;
+            position: absolute;
+            background: $secHandColor;
+            height: $outerbox-height / 2 - $from-top;
+            top: $from-top;
+            width: 1px;
+          }
+        }
+
+        &.min-hand {
+          &:before {
+            $from-top: 30px;
+            content: "";
+            display: block;
+            position: absolute;
+            background: $minHandColor;
+            height: $outerbox-height / 2 - $from-top;
+            top: $from-top;
+            width: 3px;
+          }
+        }
+
+        &.hour-hand {
+          &:before {
+            $from-top: 55px;
+            content: "";
+            display: block;
+            position: absolute;
+            background: $hovHandColor;
+            height: $outerbox-height / 2 - $from-top;
+            top: $from-top;
+            width: 5px;
+          }
+        }
+      }
+    }
+  }
+
+  .center-dot {
+    $dot-size: 15;
+    position: absolute;
+    display: block;
+    top: 50%;
+    left: 0;
+    right: 0;
+    margin: auto;
+    height: $dot-size+px;
+    width: $dot-size+px;
+    border-radius: 50%;
+    transform: translateY(-50%);
+    background: #f1c40f;
+    z-index: 2;
+
+    &:before {
+      content: "";
+      display: block;
+      position: absolute;
+      border-radius: 50%;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      left: 0;
+      right: 0;
+      margin: auto;
+      transform: translatey(-50%);
+      transform-origin: center center;
+      animation: rippleAnim 1s infinite ease-in-out;
+    }
+
+    &:before {
+      background: #f1c40f;
+    }
+
+    &:after {
+      background: #1abc9c;
+    }
+  }
+}
+
+@keyframes jumpTicks {
+  from {
+    transform: translatey(-10px);
+    background: #3498db;
+  }
+  to {
+    transform: translatey(0px);
+  }
+}
+
+@keyframes jumpTicks1 {
+  from {
+    transform: translatey(10px);
+    background: #3498db;
+  }
+  to {
+    transform: translatey(0px);
+  }
+}
+
+
+@keyframes rippleAnim {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(2.5);
+  }
+}
